@@ -65,8 +65,11 @@ public:
       }
 
     void encode(Node* root, std::string str, std::unordered_map<char, std::string> &huffmanCode);
-    void decode(Node* root, int &index, std::string str);
-    void buildHuffmanTree(std::string text);
+    double encode(const std::string &text , const std::string &EncodedString);
+    std::string encode(const std::string &text);
+    void decode(Node* root, int &index, std::string &str);
+    void buildHuffmanTree(const std::string &text);
+    std::string decode(std::string &EncodedString);
   
 private:
     Node *m_root = nullptr;

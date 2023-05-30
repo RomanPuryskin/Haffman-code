@@ -14,8 +14,28 @@ void HuffmanTree::encode(Node* root, std::string str, std::unordered_map<char, s
     	encode(root->GetRight(), str + "1", huffmanCode);
     }
 
+std::string HuffmanTree::encode(const std::string &text)
+  {
+    
+    std::unordered_map<char, std::string> huffman;
+  	encode(m_root, "", huffman);
+    std::cout << "Huffman Codes are :\n" << '\n';
+  	for (auto pair: huffman)
+  		std::cout << pair.first << " " << pair.second << '\n';
 
-void HuffmanTree:: decode(Node* root, int &index, std::string str)
+    std::string EncodedString = "";
+  	for (char ch: text) 
+  		EncodedString += huffman[ch];
+
+    return EncodedString;
+  }
+
+double HuffmanTree::encode(const std::string &text , const std::string &EncodedString)
+  {
+    return (text.size() * 8) / EncodedString.size() ;
+  }
+
+void HuffmanTree:: decode(Node* root, int &index, std::string &str)
     {
     	if (root == nullptr) {
     		return;
@@ -38,10 +58,10 @@ void HuffmanTree:: decode(Node* root, int &index, std::string str)
 
 
 
-void HuffmanTree::buildHuffmanTree(std::string text)
+void HuffmanTree::buildHuffmanTree(const std::string &text)
   {
 
-    std::vector<Node *> nodes;
+    std::list <Node *> nodes;
     // посчитали частоты для каждого символа
     std::unordered_map<char, int> freq;
   	for (char ch: text) 
@@ -49,9 +69,10 @@ void HuffmanTree::buildHuffmanTree(std::string text)
     // заполняем лист нодами
     for (auto pair: freq)
   		nodes.push_back(getNode(pair.first, pair.second, nullptr, nullptr));
-    
-    std::sort(nodes.begin(), nodes.end(), [](Node *first, Node *second) {
-        return first->GetFreq() < second->GetFreq();
+
+    nodes.sort([](Node* left , Node* right)
+      {
+        return left->GetFreq() < right->GetFreq();
     });
 
     
@@ -59,43 +80,40 @@ void HuffmanTree::buildHuffmanTree(std::string text)
     {
         Node *subTreeRoot = nullptr;
 
-        Node *left = nodes.front(); nodes.erase(nodes.begin());
-  		  Node *right = nodes.front();	nodes.erase(nodes.begin());
+        Node *left = nodes.front(); nodes.pop_front();
+  		  Node *right = nodes.front();	nodes.pop_front();
         int sum = left->GetFreq() + right->GetFreq();
         subTreeRoot = getNode('\0', sum ,left, right);
 
-        std::vector<Node *>::iterator seeker = nodes.begin();
+        std::list<Node *>::iterator seeker = nodes.begin();
         while (seeker != nodes.end() && (*seeker)->GetFreq() <= subTreeRoot->GetFreq()) {
             seeker++;
         }
         nodes.insert(seeker, subTreeRoot);
     }
       
+  // корень дерева - оставшаяся последняя нода
+    m_root = nodes.front();
+    nodes.pop_front();
 
-  
-    // корень дерева - оставшаяся последняя нода
-    Node* root = nodes.front();
-
-  	std::unordered_map<char, std::string> huffmanCode;
-  	encode(root, "", huffmanCode);
-  
-  	std::cout << "Huffman Codes are :\n" << '\n';
-  	for (auto pair: huffmanCode)
-  		std::cout << pair.first << " " << pair.second << '\n';
-  
-  	std::cout << "\nOriginal string was :\n" << text << '\n';
-  
-  	// print encoded string
-  	std::string str = "";
-  	for (char ch: text) 
-  		str += huffmanCode[ch];
-  
-  	std::cout << "\nEncoded string is :\n" << str << '\n';
-  
-  	// traverse the Huffman Tree again and this time
-  	// decode the encoded string
-  	int index = -1;
-  	std::cout << "\nDecoded string is: \n";
-  	while (index < (int)str.size() - 2)
-  		decode(root, index, str);
   }
+
+std::string HuffmanTree::decode(std::string &EncodedString)
+{
+  std::string DecodedString = "";
+  Node* temp = m_root;
+  for (char ch : EncodedString)
+    {
+      if(ch == '0')
+        temp = temp->GetLeft();
+      else
+        temp = temp ->GetRight();
+
+      if(!temp->GetLeft() && !temp->GetRight())
+      {
+        DecodedString += temp->GetChar();
+        temp = m_root;
+      }
+    }
+  return DecodedString;
+}

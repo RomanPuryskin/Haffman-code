@@ -8,6 +8,10 @@ int main()
 
 	//buildHuffmanTree(text);
   tree.buildHuffmanTree(text);
+  std::string EncodedText = tree.encode(text);
+  double Compress = tree.encode(text, EncodedText);
 
+  std::string DecodedText = tree.decode(EncodedText);
+  std::cout<< DecodedText;
 	return 0;
 }
