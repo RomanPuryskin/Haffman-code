@@ -82,12 +82,12 @@ public:
     HuffmanTree() {m_root = nullptr;}
     ~HuffmanTree();
     void DeleteTree(Node* node);
-    double encode(const std::string &text , const std::string &EncodedString);
-    std::string encode(const std::string &text);
+    double getCompression(const std::string &text , const std::string &encodedText);
+    bool encode(const std::string &fileName , const std::string &fileName1);
     std::string encode(char ch);
     void encode(Node* node, char ch, std::string Code, std::string& encodedChar);
-    void buildHuffmanTree(const std::string &text);
-    std::string decode(std::string &encodedText);
+    bool buildHuffmanTree(const std::string &fileName);
+    bool decode(const std::string &fileName , const std::string &fileName1);
 
   
 private:

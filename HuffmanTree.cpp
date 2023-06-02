@@ -63,35 +63,74 @@ void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& enc
 
 }
 
-std::string HuffmanTree::encode(const std::string &text)
+bool HuffmanTree::encode(const std::string &fileName , const std::string &fileName1)
 {
+    char ch;
+    std::ifstream file(fileName);
+    std::ofstream file1(fileName1);
+    if ( !file.is_open() || !file1.is_open() )
+      return false;
     std::string encodedText = "";
  
-    for (char ch : text)
-    {
+    while (file.get(ch))
+      {
         encodedText += encode(ch);
-    }
-  return encodedText;
+      }
+
+    for (char ch : encodedText)
+      file1<<ch;
+
+  file.close();
+  file1.close();
+  return true;
 }
 //--------------------------------------------------------------//
 
 
-double HuffmanTree::encode(const std::string &text , const std::string &encodedText)
-  {
-    return (text.size() * 8) / encodedText.size() ;
-  }
+double HuffmanTree::getCompression(const std::string &text , const std::string &encodedText)
+{
+  char ch;
+  std::ifstream file(text);
+  std::ifstream file1(encodedText);
+  if ( !file.is_open() || !file1.is_open() )
+      return -1;
+  double textSize = 0;
+  double encodedTextSize = 0;
+  double Compression = 0;
+  while(file.get(ch))
+    textSize++ ;
+  while(file1.get(ch))
+    encodedTextSize++;
+  Compression = ( textSize * 8 ) / encodedTextSize;
+
+  if(textSize == 0 || encodedTextSize == 0)
+    return -1;
+  file.close();
+  file1.close();
+  return Compression;
+  
+}
 
 
 //-----------------------Построение дерева----------------------------//
-void HuffmanTree::buildHuffmanTree(const std::string &text)
+bool HuffmanTree::buildHuffmanTree(const std::string &fileName)
   {
 
+    char ch;
+    std::ifstream file(fileName);
+    if ( !file.is_open())
+      return false;
     std::list <Node *> nodes;
     // посчитали частоты для каждого символа
     std::unordered_map<char, int> freq;
-  	for (char ch: text) 
-  		freq[ch]++;
+    while (file.get(ch))
+      {
+        freq[ch]++;
+      }
+
     // заполняем лист нодами
+
+    file.close();
     for (auto pair: freq)
   		nodes.push_back(getNodeByChar(pair.first, pair.second, nullptr, nullptr));
 
@@ -125,30 +164,37 @@ void HuffmanTree::buildHuffmanTree(const std::string &text)
   // корень дерева - оставшаяся последняя нода
     m_root = nodes.front();
     nodes.pop_front();
-
+    return true;
 }
 //-------------------------------------------------------------//
 
-std::string HuffmanTree::decode(std::string &encodedText)
+bool HuffmanTree::decode(const std::string &fileName ,const std::string &fileName1)
 {
-  std::string decodedText = "";
+  char ch;
+  std::ofstream file1(fileName1);
+  std::ifstream file(fileName);
+  if ( !file.is_open() || !file1.is_open() )
+    return false;
   Node* temp = m_root;
-  for (char ch : encodedText)
-    {
-      if(ch == '0')
-        temp = temp->GetLeft();
-      else
-        temp = temp ->GetRight();
 
-     if(!temp->GetLeft() && !temp->GetRight())
+  while (file.get(ch))
       {
-        std::set<char> tempTemp = temp->GetSet();
-        std::set<char>::iterator it;
-        it = tempTemp.begin();
-        decodedText += *it;
-        temp = m_root;
+        if(ch == '0')
+          temp = temp->GetLeft();
+        else
+          temp = temp ->GetRight();
+
+       if(!temp->GetLeft() && !temp->GetRight())
+        {
+          std::set<char> tempTemp = temp->GetSet();
+          std::set<char>::iterator it;
+          it = tempTemp.begin();
+          file1 << *it;
+          temp = m_root;
+        }
       }
-    }
-  return decodedText;
+  file.close();
+  file1.close();
+  return true;
 }
 

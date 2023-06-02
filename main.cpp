@@ -6,14 +6,14 @@ int main()
 
   HuffmanTree tree;
 
+  std::string Text = "Text.txt";
+  std::string EncodedText = "EncodedText.txt";
+  std::string DecodedText = "DecodedText.txt";
 
-  tree.buildHuffmanTree(text);
-  std::string EncodedText = tree.encode(text);
-  //double Compress = tree.encode(text, EncodedText);
-  //std::cout<<Compress;
-  //std::string DecodedText = tree.decode(EncodedText);
-  std::cout<< EncodedText<<std::endl;
-  std::string DecodedText = tree.decode(EncodedText);
-  std::cout<<DecodedText;
+  tree.buildHuffmanTree(Text);
+  tree.encode(Text,EncodedText);
+  tree.decode(EncodedText , DecodedText);
+  double Compress = tree.getCompression(Text, EncodedText);
+  std::cout<<Compress;
 	return 0;
 }
