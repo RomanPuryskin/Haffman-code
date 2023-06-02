@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iterator>
 #include <list>
+#include <fstream>
 
 class HuffmanTree
 {
@@ -78,7 +79,9 @@ public:
         return node;
       }
 
-
+    HuffmanTree() {m_root = nullptr;}
+    ~HuffmanTree();
+    void DeleteTree(Node* node);
     double encode(const std::string &text , const std::string &EncodedString);
     std::string encode(const std::string &text);
     std::string encode(char ch);

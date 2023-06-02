@@ -6,6 +6,7 @@ int main()
 
   HuffmanTree tree;
 
+
   tree.buildHuffmanTree(text);
   std::string EncodedText = tree.encode(text);
   //double Compress = tree.encode(text, EncodedText);

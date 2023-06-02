@@ -1,6 +1,23 @@
 #pragma once
 #include "HuffmanTree.h"
 
+//---------------Деструктор----------------//
+HuffmanTree::~HuffmanTree()
+{
+    DeleteTree(m_root);
+}
+ 
+void HuffmanTree::DeleteTree(Node* node)
+{
+    if (node)
+    {
+        DeleteTree(node->GetLeft());
+        DeleteTree(node->GetRight());
+ 
+        delete node;
+    }
+}
+//------------------------------------------//
 
 //-------------------------Кодирование-----------------------------//
 std::string HuffmanTree::encode(char ch) 
