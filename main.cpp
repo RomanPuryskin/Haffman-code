@@ -2,16 +2,17 @@
 
 int main()
 {
-	std::string text = "Huffman coding is a data compression algorithm.";
+	std::string text = "ehal greka 4erez reky";
 
   HuffmanTree tree;
 
-	//buildHuffmanTree(text);
   tree.buildHuffmanTree(text);
   std::string EncodedText = tree.encode(text);
-  double Compress = tree.encode(text, EncodedText);
-
+  //double Compress = tree.encode(text, EncodedText);
+  //std::cout<<Compress;
+  //std::string DecodedText = tree.decode(EncodedText);
+  std::cout<< EncodedText<<std::endl;
   std::string DecodedText = tree.decode(EncodedText);
-  std::cout<< DecodedText;
+  std::cout<<DecodedText;
 	return 0;
 }

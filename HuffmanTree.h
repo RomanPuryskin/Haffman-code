@@ -1,8 +1,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include <vector>
-#include <queue>
+#include <set>
 #include <algorithm>
 #include <iterator>
 #include <list>
@@ -33,9 +32,16 @@ public:
   
       void SetFreq(int freq) { m_freq = freq; }
   
-      char GetChar() {return m_char;}
-  
-      void SetChar(char ch){ m_char = ch;}
+      void SetInSetByChar (char ch) {m_symbols.insert(ch);}
+      void SetInSetBySet (std::set<char> temp) 
+      {
+        m_symbols.insert(temp.begin() , temp.end());
+      }
+
+      std::set<char> GetSet()
+      {
+        return m_symbols;
+      }
   
       Node *GetLeft() { return m_left; }
   
@@ -46,30 +52,40 @@ public:
       void SetRight(Node *right) { m_right = right; }
     
   private:
-      char m_char;
+      std::set<char> m_symbols;
       Node *m_left = nullptr;
       Node *m_right = nullptr;
       int m_freq;
     };
   
-    Node* getNode(char ch, int freq, Node* left, Node* right)
+    Node* getNodeByChar(char ch, int freq, Node* left, Node* right)
       {
       	Node* node = new Node();
-      
-      	node->SetChar(ch);
+        node->SetInSetByChar(ch);
       	node->SetFreq(freq);
       	node->SetLeft(left);
       	node->SetRight(right);
-      
-      	return node;
+        return node;
       }
 
-    void encode(Node* root, std::string str, std::unordered_map<char, std::string> &huffmanCode);
+    Node* getNodeBySet(std::set<char> temp , int freq , Node* left , Node* right)
+      {
+        Node* node = new Node();
+        node->SetInSetBySet(temp);
+        node->SetFreq(freq);
+        node->SetLeft(left);
+        node->SetRight(right);
+        return node;
+      }
+
+
     double encode(const std::string &text , const std::string &EncodedString);
     std::string encode(const std::string &text);
-    void decode(Node* root, int &index, std::string &str);
+    std::string encode(char ch);
+    void encode(Node* node, char ch, std::string Code, std::string& encodedChar);
     void buildHuffmanTree(const std::string &text);
-    std::string decode(std::string &EncodedString);
+    std::string decode(std::string &encodedText);
+
   
 private:
     Node *m_root = nullptr;
