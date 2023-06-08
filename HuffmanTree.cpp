@@ -27,6 +27,7 @@ std::string HuffmanTree::encode(char ch)
     return encodedChar;
 }
 
+//std::string HuffmanTree::encode(Node* root, char ch, std::string Code)
 void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& encodedChar)
 {
 
@@ -41,75 +42,41 @@ void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& enc
         encodedChar = Code;
     	}
 
-    else
-    {
-      if(root->GetLeft())
+    if(root->GetLeft())
       { 
         std::set<char> tempLeft = root->GetLeft()->GetSet();
-  
-    
         if ( tempLeft.find(ch) != tempLeft.end())
           encode(root->GetLeft(), ch , Code + "0", encodedChar);
         else
-        {
-          if (root->GetRight())
-          {
-            std::set<char> tempRight = root->GetRight()->GetSet();
-            encode(root->GetRight(),ch, Code + "1", encodedChar);
-          }
-        }
+          encode(root->GetRight(), ch , Code + "1", encodedChar);
       }
-    }
-
 }
 
-bool HuffmanTree::encode(const std::string &fileName , const std::string &fileName1)
+double HuffmanTree::encode(const std::string &fileName , const std::string &fileName1)
 {
-    char ch;
     std::ifstream file(fileName);
     std::ofstream file1(fileName1);
     if ( !file.is_open() || !file1.is_open() )
-      return false;
-    std::string encodedText = "";
- 
+      return -1;
+
+    double textSize = 0;
+    double EncodedTextSize = 0;
+    char ch;
     while (file.get(ch))
       {
-        encodedText += encode(ch);
+        textSize++;
+        std::string str = encode(ch);
+        file1 << str;
+        EncodedTextSize +=str.size();
       }
 
-    for (char ch : encodedText)
-      file1<<ch;
-
-  file.close();
-  file1.close();
-  return true;
-}
-//--------------------------------------------------------------//
-
-
-double HuffmanTree::getCompression(const std::string &text , const std::string &encodedText)
-{
-  char ch;
-  std::ifstream file(text);
-  std::ifstream file1(encodedText);
-  if ( !file.is_open() || !file1.is_open() )
-      return -1;
-  double textSize = 0;
-  double encodedTextSize = 0;
-  double Compression = 0;
-  while(file.get(ch))
-    textSize++ ;
-  while(file1.get(ch))
-    encodedTextSize++;
-  Compression = ( textSize * 8 ) / encodedTextSize;
-
-  if(textSize == 0 || encodedTextSize == 0)
-    return -1;
+  double Compression = (textSize * 8)/EncodedTextSize;
   file.close();
   file1.close();
   return Compression;
-  
 }
+//--------------------------------------------------------------//
+
 
 
 //-----------------------Построение дерева----------------------------//
@@ -132,7 +99,7 @@ bool HuffmanTree::buildHuffmanTree(const std::string &fileName)
 
     file.close();
     for (auto pair: freq)
-  		nodes.push_back(getNodeByChar(pair.first, pair.second, nullptr, nullptr));
+  		nodes.push_back(new Node(pair.first, pair.second, nullptr, nullptr));
 
     nodes.sort([](Node* left , Node* right)
       {
@@ -154,7 +121,7 @@ bool HuffmanTree::buildHuffmanTree(const std::string &fileName)
         temp.insert(  leftTemp.begin() , leftTemp.end()   );
         temp.insert(   rightTemp.begin() , rightTemp.end()   );
         
-        subTreeRoot = getNodeBySet(temp, sum ,left, right);
+        subTreeRoot = new Node(temp, sum ,left, right);
 
         std::list<Node *>::iterator seeker = nodes.begin();
         while (seeker != nodes.end() && (*seeker)->GetFreq() <= subTreeRoot->GetFreq())           seeker++;

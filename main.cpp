@@ -13,7 +13,7 @@ int main()
   tree.buildHuffmanTree(Text);
   tree.encode(Text,EncodedText);
   tree.decode(EncodedText , DecodedText);
-  double Compress = tree.getCompression(Text, EncodedText);
+  double Compress = tree.encode(Text,EncodedText);
   std::cout<<Compress;
 	return 0;
 }

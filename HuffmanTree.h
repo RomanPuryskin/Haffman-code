@@ -22,11 +22,20 @@ public:
         m_right = nullptr;
       }
       
-      Node(int freq) 
+      Node(char ch, int freq, Node* left, Node* right) 
       {
-        m_freq = freq;
-        m_left = nullptr;
-        m_right = nullptr;
+        SetInSetByChar(ch);
+      	SetFreq(freq);
+      	SetLeft(left);
+      	SetRight(right);
+      }
+
+      Node(std::set<char> temp , int freq , Node* left , Node* right)
+      {
+        SetInSetBySet(temp);
+        SetFreq(freq);
+        SetLeft(left);
+        SetRight(right);
       }
       
       int GetFreq() { return m_freq; }
@@ -58,32 +67,12 @@ public:
       Node *m_right = nullptr;
       int m_freq;
     };
-  
-    Node* getNodeByChar(char ch, int freq, Node* left, Node* right)
-      {
-      	Node* node = new Node();
-        node->SetInSetByChar(ch);
-      	node->SetFreq(freq);
-      	node->SetLeft(left);
-      	node->SetRight(right);
-        return node;
-      }
 
-    Node* getNodeBySet(std::set<char> temp , int freq , Node* left , Node* right)
-      {
-        Node* node = new Node();
-        node->SetInSetBySet(temp);
-        node->SetFreq(freq);
-        node->SetLeft(left);
-        node->SetRight(right);
-        return node;
-      }
 
     HuffmanTree() {m_root = nullptr;}
     ~HuffmanTree();
     void DeleteTree(Node* node);
-    double getCompression(const std::string &text , const std::string &encodedText);
-    bool encode(const std::string &fileName , const std::string &fileName1);
+    double encode(const std::string &fileName , const std::string &fileName1);
     std::string encode(char ch);
     void encode(Node* node, char ch, std::string Code, std::string& encodedChar);
     bool buildHuffmanTree(const std::string &fileName);
