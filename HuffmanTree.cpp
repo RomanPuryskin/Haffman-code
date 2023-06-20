@@ -34,7 +34,7 @@ void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& enc
 
     if (!root)
     {
-        return;
+      root = nullptr;
     }
   
     if (!root->GetLeft() && !root->GetRight()) 
