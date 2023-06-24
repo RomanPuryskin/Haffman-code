@@ -73,10 +73,19 @@ public:
     ~HuffmanTree();
     void DeleteTree(Node* node);
     double encode(const std::string &fileName , const std::string &fileName1);
-    std::string encode(char ch,const std::string &fileName);
-    void encode(Node* node, char ch, std::string Code, std::string& encodedChar,const std::string &fileName);
+    std::string encode(char ch);
+    void encode(Node* node, char ch, std::string Code, std::string& encodedChar);
     bool buildHuffmanTree(const std::string &fileName);
     bool decode(const std::string &fileName , const std::string &fileName1);
+    void DestroyTree(Node* root)
+    {
+      if (root != nullptr) 
+      {
+        DestroyTree(root->GetLeft());
+        DeleteTree(root->GetRight());
+        delete root;
+      }
+    }
 
   
 private:

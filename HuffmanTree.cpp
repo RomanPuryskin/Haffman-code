@@ -20,21 +20,21 @@ void HuffmanTree::DeleteTree(Node* node)
 //------------------------------------------//
 
 //-------------------------Кодирование-----------------------------//
-std::string HuffmanTree::encode(char ch,const std::string &fileName) 
+std::string HuffmanTree::encode(char ch) 
 {
     std::string encodedChar = "";
-    encode(m_root, ch, "", encodedChar,fileName);
+    encode(m_root, ch, "", encodedChar);
     return encodedChar;
 }
 
 //std::string HuffmanTree::encode(Node* root, char ch, std::string Code)
-void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& encodedChar , const std::string &fileName)
+void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& encodedChar)
 {
 
 
     if (!root)
     {
-      buildHuffmanTree(fileName);
+      return;
     }
   
     if (!root->GetLeft() && !root->GetRight()) 
@@ -46,14 +46,17 @@ void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& enc
       { 
         std::set<char> tempLeft = root->GetLeft()->GetSet();
         if ( tempLeft.find(ch) != tempLeft.end())
-          encode(root->GetLeft(), ch , Code + "0", encodedChar,fileName);
+          encode(root->GetLeft(), ch , Code + "0", encodedChar);
         else
-          encode(root->GetRight(), ch , Code + "1", encodedChar,fileName);
+          encode(root->GetRight(), ch , Code + "1", encodedChar);
       }
 }
 
 double HuffmanTree::encode(const std::string &fileName , const std::string &fileName1)
 {
+    buildHuffmanTree(fileName);
+    if(m_root == nullptr)
+      return 0;
     std::ifstream file(fileName);
     std::ofstream file1(fileName1);
     if ( !file.is_open() || !file1.is_open() )
@@ -65,7 +68,7 @@ double HuffmanTree::encode(const std::string &fileName , const std::string &file
     while (file.get(ch))
       {
         textSize++;
-        std::string str = encode(ch , fileName);
+        std::string str = encode(ch);
         file1 << str;
         EncodedTextSize +=str.size();
       }
@@ -83,6 +86,7 @@ double HuffmanTree::encode(const std::string &fileName , const std::string &file
 bool HuffmanTree::buildHuffmanTree(const std::string &fileName)
   {
 
+    DestroyTree(m_root);
     char ch;
     std::ifstream file(fileName);
     if ( !file.is_open())
