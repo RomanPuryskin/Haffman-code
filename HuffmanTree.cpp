@@ -20,21 +20,21 @@ void HuffmanTree::DeleteTree(Node* node)
 //------------------------------------------//
 
 //-------------------------Кодирование-----------------------------//
-std::string HuffmanTree::encode(char ch) 
+std::string HuffmanTree::encode(char ch,const std::string &fileName) 
 {
     std::string encodedChar = "";
-    encode(m_root, ch, "", encodedChar);
+    encode(m_root, ch, "", encodedChar,fileName);
     return encodedChar;
 }
 
 //std::string HuffmanTree::encode(Node* root, char ch, std::string Code)
-void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& encodedChar)
+void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& encodedChar , const std::string &fileName)
 {
 
 
     if (!root)
     {
-      root = nullptr;
+      buildHuffmanTree(fileName);
     }
   
     if (!root->GetLeft() && !root->GetRight()) 
@@ -46,9 +46,9 @@ void HuffmanTree::encode(Node* root, char ch, std::string Code, std::string& enc
       { 
         std::set<char> tempLeft = root->GetLeft()->GetSet();
         if ( tempLeft.find(ch) != tempLeft.end())
-          encode(root->GetLeft(), ch , Code + "0", encodedChar);
+          encode(root->GetLeft(), ch , Code + "0", encodedChar,fileName);
         else
-          encode(root->GetRight(), ch , Code + "1", encodedChar);
+          encode(root->GetRight(), ch , Code + "1", encodedChar,fileName);
       }
 }
 
@@ -65,7 +65,7 @@ double HuffmanTree::encode(const std::string &fileName , const std::string &file
     while (file.get(ch))
       {
         textSize++;
-        std::string str = encode(ch);
+        std::string str = encode(ch , fileName);
         file1 << str;
         EncodedTextSize +=str.size();
       }
