@@ -2,7 +2,6 @@
 
 int main()
 {
-	std::string text = "ehal greka 4erez reky";
 
   HuffmanTree tree;
 
@@ -10,10 +9,11 @@ int main()
   std::string EncodedText = "EncodedText.txt";
   std::string DecodedText = "DecodedText.txt";
 
-  tree.buildHuffmanTree(Text);
-  tree.encode(Text,EncodedText);
-  tree.decode(EncodedText , DecodedText);
+ // tree.buildHuffmanTree(Text);
+  //tree.encode(Text,EncodedText);
   double Compress = tree.encode(Text,EncodedText);
+  tree.decode(EncodedText , DecodedText);
+  //double Compress = tree.encode(Text,EncodedText);
   std::cout<<Compress;
 	return 0;
 }

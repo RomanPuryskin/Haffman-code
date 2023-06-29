@@ -22,8 +22,16 @@ void HuffmanTree::DeleteTree(Node* node)
 //-------------------------Кодирование-----------------------------//
 std::string HuffmanTree::encode(char ch) 
 {
-    std::string encodedChar = "";
+    std::string encodedChar;// = "";
+    /*if(m_root!=nullptr && m_root->GetLeft()==nullptr && m_root->GetRight()==nullptr)
+      {
+        encodedChar = "0";
+        return encodedChar;
+      }*/
+    //else
     encode(m_root, ch, "", encodedChar);
+    if(m_root!=nullptr && encodedChar.size() == 0)
+      encodedChar+="0";
     return encodedChar;
 }
 
@@ -72,11 +80,11 @@ double HuffmanTree::encode(const std::string &fileName , const std::string &file
         file1 << str;
         EncodedTextSize +=str.size();
       }
-
   double Compression = (textSize * 8)/EncodedTextSize;
   file.close();
   file1.close();
   return Compression;
+  return 2;
 }
 //--------------------------------------------------------------//
 
@@ -86,7 +94,7 @@ double HuffmanTree::encode(const std::string &fileName , const std::string &file
 bool HuffmanTree::buildHuffmanTree(const std::string &fileName)
   {
 
-    DestroyTree(m_root);
+    DeleteTree(m_root);
     char ch;
     std::ifstream file(fileName);
     if ( !file.is_open())
@@ -150,10 +158,11 @@ bool HuffmanTree::decode(const std::string &fileName ,const std::string &fileNam
 
   while (file.get(ch))
       {
-        if(ch == '0')
+        if(ch == '0' && temp->GetLeft())
           temp = temp->GetLeft();
         else
-          temp = temp ->GetRight();
+          if (temp->GetRight())
+            temp = temp ->GetRight();
 
        if(!temp->GetLeft() && !temp->GetRight())
         {
@@ -168,4 +177,3 @@ bool HuffmanTree::decode(const std::string &fileName ,const std::string &fileNam
   file1.close();
   return true;
 }
-
